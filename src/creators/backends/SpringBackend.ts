@@ -6,9 +6,9 @@ import { BackendFactory } from "./BackendFactory";
 
 export class SpringBackend extends BackendFactory {
   createPlayerProvider(): IPlayerProvider {
-    return new SpringPlayerProvider();
+    return new SpringPlayerProvider(this.config);
   }
   createTeamProvider(): ITeamProvider {
-    return new SpringTeamProvider();
+    return new SpringTeamProvider(this.config);
   }
 }

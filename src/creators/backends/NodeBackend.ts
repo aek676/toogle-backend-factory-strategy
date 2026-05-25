@@ -6,9 +6,9 @@ import { BackendFactory } from "./BackendFactory";
 
 export class NodeBackend extends BackendFactory {
   createPlayerProvider(): IPlayerProvider {
-    return new NodePlayerProvider();
+    return new NodePlayerProvider(this.config);
   }
   createTeamProvider(): ITeamProvider {
-    return new NodeTeamProvider();
+    return new NodeTeamProvider(this.config);
   }
 }

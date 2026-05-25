@@ -1,3 +1,4 @@
+import type { BackendConfig } from "./types/BackendConfig";
 import type { BackendFactory } from "./creators/backends/BackendFactory";
 import { NodeBackend } from "./creators/backends/NodeBackend";
 import { SpringBackend } from "./creators/backends/SpringBackend";
@@ -5,7 +6,9 @@ import type { IPlayerProvider } from "./providers/IPlayerProvider";
 import type { ITeamProvider } from "./providers/ITeamProvider";
 
 type backendOptions = "NODE" | "SPRING";
-const backendType: backendOptions = "SPRING";
+const backendType: backendOptions = "NODE";
+// Interface BackendConfig in case we need to transfer more thinks like auth tokens, etc. in the future
+const config: BackendConfig = { gatewayUrl: "localhost:8080" };
 
 function app() {
   let playerProvider: IPlayerProvider;
@@ -18,9 +21,9 @@ function app() {
 
   function main() {
     if (backendType === "NODE") {
-      initialize(new NodeBackend());
+      initialize(new NodeBackend(config));
     } else if (backendType === "SPRING") {
-      initialize(new SpringBackend());
+      initialize(new SpringBackend(config));
     } else {
       throw new Error("Invalid backend type");
     }
