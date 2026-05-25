@@ -30,8 +30,8 @@ function app() {
       throw new Error("Invalid backend type");
     }
 
-    console.log("Players:", playerProvider.getPlayers());
-    console.log("Teams:", teamProvider.getTeams());
+    console.log("Players:\n", playerProvider.getPlayers());
+    console.log("Teams:\n", Bun.inspect(teamProvider.getTeams()));
   }
 
   main();
