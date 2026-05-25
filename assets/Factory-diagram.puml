@@ -1,0 +1,101 @@
+@startuml
+skinparam linestyle ortho
+skinparam packageStyle rectangle
+
+interface BackendConfig {
+    +gatewayUrl: string
+}
+
+interface Player {
+    +id: string
+    +name: string
+    +position: string
+}
+
+interface Team {
+    +id: string
+    +name: string
+    +players: Player[]
+}
+
+package "Abstract Factory Core" {
+    abstract class BackendFactory {
+        #config: BackendConfig
+        +{abstract} createPlayerProvider(): IPlayerProvider
+        +{abstract} createTeamProvider(): ITeamProvider
+    }
+
+    interface IPlayerProvider {
+        +getPlayerById(playerId: string): Player
+        +getPlayers(): Player[]
+    }
+
+    interface ITeamProvider {
+        +getTeamById(teamId: string): Team
+        +getTeams(): Team[]
+    }
+
+    abstract class BaseProvider {
+        #config: BackendConfig
+        #getGatewayUrl(): string
+    }
+}
+
+package "Node Implementation" {
+    class NodeBackend extends BackendFactory {
+        +createPlayerProvider(): IPlayerProvider
+        +createTeamProvider(): ITeamProvider
+    }
+
+    class NodePlayerProvider extends BaseProvider implements IPlayerProvider {
+        +getPlayerById(playerId: string): Player
+        +getPlayers(): Player[]
+    }
+
+    class NodeTeamProvider extends BaseProvider implements ITeamProvider {
+        +getTeamById(teamId: string): Team
+        +getTeams(): Team[]
+    }
+}
+
+package "Spring Implementation" {
+    class SpringBackend extends BackendFactory {
+        +createPlayerProvider(): IPlayerProvider
+        +createTeamProvider(): ITeamProvider
+    }
+
+    class SpringPlayerProvider extends BaseProvider implements IPlayerProvider {
+        +getPlayerById(playerId: string): Player
+        +getPlayers(): Player[]
+    }
+
+    class SpringTeamProvider extends BaseProvider implements ITeamProvider {
+        +getTeamById(teamId: string): Team
+        +getTeams(): Team[]
+    }
+}
+
+class App {
+    +app(): void
+}
+
+Team o-- Player
+
+BaseProvider --> BackendConfig
+BackendFactory --> BackendConfig
+
+IPlayerProvider ..> Player
+ITeamProvider ..> Team
+
+BackendFactory ..> IPlayerProvider
+BackendFactory ..> ITeamProvider
+
+NodeBackend ..> NodePlayerProvider : <<create>>
+NodeBackend ..> NodeTeamProvider : <<create>>
+SpringBackend ..> SpringPlayerProvider : <<create>>
+SpringBackend ..> SpringTeamProvider : <<create>>
+
+App ..> BackendFactory
+App ..> IPlayerProvider
+App ..> ITeamProvider
+@enduml
