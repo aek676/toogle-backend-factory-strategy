@@ -1,0 +1,167 @@
+@startuml
+skinparam linetype ortho
+skinparam nodesep 60
+skinparam ranksep 60
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam packageStyle rectangle
+
+skinparam class {
+    BackgroundColor #FDFDFD
+    ArrowColor #333333
+    BorderColor #333333
+}
+
+package "Domain Models" {
+    interface Player {
+        +id: string
+        +name: string
+        +position: string
+    }
+    interface Team {
+        +id: string
+        +name: string
+        +players: Player[]
+    }
+}
+
+package "Interfaces & Configuration" {
+    interface BackendConfig {
+        +gatewayUrl: string
+    }
+    interface IPlayerProvider {
+        +getPlayerById(playerId: string): Player
+        +getPlayers(): Player[]
+    }
+    interface ITeamProvider {
+        +getTeamById(teamId: string): Team
+        +getTeams(): Team[]
+    }
+}
+
+package "Core Context" {
+    class AppCLI {
+        +app(): void
+        +initProviders(): void
+        +toggleBackend(): void
+        +showMenu(): string
+        +main(): Promise<void>
+    }
+    class BackendContext {
+        -strategy: BackendFactory
+        +setStrategy(strategy: BackendFactory): void
+        +init(): { playerProvider: IPlayerProvider; teamProvider: ITeamProvider; }
+    }
+}
+
+package "Factory Base" {
+    abstract class BackendFactory {
+        #config: BackendConfig
+        +{abstract} createPlayerProvider(): IPlayerProvider
+        +{abstract} createTeamProvider(): ITeamProvider
+    }
+    abstract class BaseProvider {
+        #config: BackendConfig
+        #gatewayUrl: string
+    }
+}
+
+package "Node Implementation" {
+    class NodeBackend extends BackendFactory {
+        +createPlayerProvider(): IPlayerProvider
+        +createTeamProvider(): ITeamProvider
+    }
+    class NodePlayerProvider extends BaseProvider implements IPlayerProvider {
+        +getPlayerById(playerId: string): Player
+        +getPlayers(): Player[]
+    }
+    class NodeTeamProvider extends BaseProvider implements ITeamProvider {
+        +getTeamById(teamId: string): Team
+        +getTeams(): Team[]
+    }
+}
+
+package "Spring Implementation" {
+    class SpringBackend extends BackendFactory {
+        +createPlayerProvider(): IPlayerProvider
+        +createTeamProvider(): ITeamProvider
+    }
+    class SpringPlayerProvider extends BaseProvider implements IPlayerProvider {
+        +getPlayerById(playerId: string): Player
+        +getPlayers(): Player[]
+    }
+    class SpringTeamProvider extends BaseProvider implements ITeamProvider {
+        +getTeamById(teamId: string): Team
+        +getTeams(): Team[]
+    }
+}
+
+Team --> Player
+BackendContext --> BackendFactory
+BaseProvider --> BackendConfig
+BackendFactory --> BackendConfig
+AppCLI --> BackendContext
+
+BackendContext ..> IPlayerProvider
+BackendContext ..> ITeamProvider
+BackendFactory ..> IPlayerProvider
+BackendFactory ..> ITeamProvider
+IPlayerProvider ..> Player
+ITeamProvider ..> Team
+
+NodeBackend ..> NodePlayerProvider
+NodeBackend ..> NodeTeamProvider
+SpringBackend ..> SpringPlayerProvider
+SpringBackend ..> SpringTeamProvider
+
+AppCLI ..> IPlayerProvider
+AppCLI ..> ITeamProvider
+AppCLI ..> BackendConfig
+AppCLI ..> NodeBackend
+AppCLI ..> SpringBackend
+@endumlrovider(): IPlayerProvider
+    +createTeamProvider(): ITeamProvider
+}
+class SpringPlayerProvider extends BaseProvider implements IPlayerProvider {
+    +getPlayerById(playerId: string): Player
+    +getPlayers(): Player[]
+}
+class SpringTeamProvider extends BaseProvider implements ITeamProvider {
+    +getTeamById(teamId: string): Team
+    +getTeams(): Team[]
+}
+class SpringBackend extends BackendFactory {
+    +createPlayerProvider(): IPlayerProvider
+    +createTeamProvider(): ITeamProvider
+}
+
+class AppCLI {
+    +app(): void
+    +initProviders(): void
+    +toggleBackend(): void
+    +showMenu(): string
+    +main(): Promise<void>
+}
+
+Team --> Player
+BackendContext --> BackendFactory
+BaseProvider --> BackendConfig
+BackendFactory --> BackendConfig
+AppCLI --> BackendContext
+
+BackendContext ..> IPlayerProvider
+BackendContext ..> ITeamProvider
+BackendFactory ..> IPlayerProvider
+BackendFactory ..> ITeamProvider
+IPlayerProvider ..> Player
+ITeamProvider ..> Team
+NodeBackend ..> NodePlayerProvider
+NodeBackend ..> NodeTeamProvider
+SpringBackend ..> SpringPlayerProvider
+SpringBackend ..> SpringTeamProvider
+AppCLI ..> IPlayerProvider
+AppCLI ..> ITeamProvider
+AppCLI ..> BackendConfig
+AppCLI ..> NodeBackend
+AppCLI ..> SpringBackend
+@enduml
