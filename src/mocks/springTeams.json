@@ -1,0 +1,19 @@
+[
+  {
+    "id": "1",
+    "name": "Spring Team Alpha",
+    "players": [
+      { "id": "1", "name": "Jude Bellingham", "position": "Midfielder" },
+      { "id": "2", "name": "Vinícius Jr.", "position": "Forward" },
+      { "id": "3", "name": "Raphinha", "position": "Forward" }
+    ]
+  },
+  {
+    "id": "2",
+    "name": "Spring Team Beta",
+    "players": [
+      { "id": "1", "name": "Jude Bellingham", "position": "Midfielder" },
+      { "id": "2", "name": "Vinícius Jr.", "position": "Forward" }
+    ]
+  }
+]

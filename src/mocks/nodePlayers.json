@@ -1,0 +1,17 @@
+[
+  {
+    "id": "1",
+    "name": "Carlos Alcaraz",
+    "position": "Forward"
+  },
+  {
+    "id": "2",
+    "name": "Lamine Yamal",
+    "position": "Midfielder"
+  },
+  {
+    "id": "3",
+    "name": "Pedri Gonzalez",
+    "position": "Midfielder"
+  }
+]

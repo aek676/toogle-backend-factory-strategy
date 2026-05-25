@@ -1,13 +1,35 @@
-import { NodePlayerCreator } from "./creators/NodePlayerCreator";
-import { SpringPlayerCreator } from "./creators/SpringPlayerCreator";
+import type { BackendFactory } from "./creators/backends/BackendFactory";
+import { NodeBackend } from "./creators/backends/NodeBackend";
+import { SpringBackend } from "./creators/backends/SpringBackend";
+import type { IPlayerProvider } from "./providers/IPlayerProvider";
+import type { ITeamProvider } from "./providers/ITeamProvider";
 
-const nodeCreator = new NodePlayerCreator();
-const springCreator = new SpringPlayerCreator();
+type backendOptions = "NODE" | "SPRING";
+const backendType: backendOptions = "SPRING";
 
-console.log("=== Node Players ===");
-console.log(nodeCreator.getPlayers());
-console.log("Node Player with id 2:", nodeCreator.getPlayer("2"));
+function app() {
+  let playerProvider: IPlayerProvider;
+  let teamProvider: ITeamProvider;
 
-console.log("\n=== Spring Players ===");
-console.log(springCreator.getPlayers());
-console.log("Spring Player with id 5:", springCreator.getPlayer("5"));
+  function initialize(factory: BackendFactory) {
+    playerProvider = factory.createPlayerProvider();
+    teamProvider = factory.createTeamProvider();
+  }
+
+  function main() {
+    if (backendType === "NODE") {
+      initialize(new NodeBackend());
+    } else if (backendType === "SPRING") {
+      initialize(new SpringBackend());
+    } else {
+      throw new Error("Invalid backend type");
+    }
+
+    console.log("Players:", playerProvider.getPlayers());
+    console.log("Teams:", teamProvider.getTeams());
+  }
+
+  main();
+}
+
+app();

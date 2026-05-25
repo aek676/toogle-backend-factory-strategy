@@ -1,0 +1,19 @@
+[
+  {
+    "id": "1",
+    "name": "Node Team Alpha",
+    "players": [
+      { "id": "1", "name": "Carlos Alcaraz", "position": "Forward" },
+      { "id": "2", "name": "Lamine Yamal", "position": "Midfielder" },
+      { "id": "3", "name": "Pedri Gonzalez", "position": "Midfielder" }
+    ]
+  },
+  {
+    "id": "2",
+    "name": "Node Team Beta",
+    "players": [
+      { "id": "2", "name": "Lamine Yamal", "position": "Midfielder" },
+      { "id": "3", "name": "Pedri Gonzalez", "position": "Midfielder" }
+    ]
+  }
+]
