@@ -202,7 +202,7 @@ bun install
 ### Run the Strategy + Factory version (interactive)
 
 ```bash
-bun run index.ts
+bun run src/index.ts
 ```
 
 This starts an interactive CLI menu where you can toggle between the Node and Spring backends at runtime, list players and teams, and fetch individual records by ID.
@@ -210,7 +210,7 @@ This starts an interactive CLI menu where you can toggle between the Node and Sp
 ### Run the pure Factory Method version (one-shot)
 
 ```bash
-bun run index.factory.ts
+bun run src/index.factory.ts
 ```
 
 This runs a non-interactive script that selects a backend via a hardcoded constant, fetches all players and teams, prints them, and exits. The backend type can only be changed by editing the source code.
