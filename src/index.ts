@@ -1,38 +1,39 @@
-import type { BackendConfig } from "./types/BackendConfig";
+import { BackendContext } from "./context/BackendContext";
 import type { BackendFactory } from "./creators/backends/BackendFactory";
 import { NodeBackend } from "./creators/backends/NodeBackend";
 import { SpringBackend } from "./creators/backends/SpringBackend";
-import type { IPlayerProvider } from "./providers/IPlayerProvider";
-import type { ITeamProvider } from "./providers/ITeamProvider";
+import type { BackendConfig } from "./types/BackendConfig";
 
 type backendOptions = "NODE" | "SPRING";
 const backendType: backendOptions = "NODE";
-// Interface BackendConfig in case we need to transfer more thinks like auth tokens, etc. in the future
 const config: BackendConfig = { gatewayUrl: "localhost:8080" };
 
 function app() {
-  let playerProvider: IPlayerProvider;
-  let teamProvider: ITeamProvider;
-
-  function initialize(factory: BackendFactory) {
-    playerProvider = factory.createPlayerProvider();
-    teamProvider = factory.createTeamProvider();
-  }
+  const backendStrategies: Record<
+    backendOptions,
+    (c: BackendConfig) => BackendFactory
+  > = {
+    NODE: (c) => new NodeBackend(c),
+    SPRING: (c) => new SpringBackend(c),
+  };
 
   function main() {
-    if (backendType === "NODE") {
-      initialize(new NodeBackend(config));
-    } else if (backendType === "SPRING") {
-      initialize(new SpringBackend(config));
-    } else {
-      throw new Error("Invalid backend type");
-    }
+    const strategyBuilder = backendStrategies[backendType];
+    if (!strategyBuilder) throw new Error("Invalid backend type");
 
-    console.log("Players:", playerProvider.getPlayers());
-    console.log("Teams:", teamProvider.getTeams());
+    const context = new BackendContext(strategyBuilder(config));
+
+    const { playerProvider, teamProvider } = context.init();
+
+    console.log("Players:\n", playerProvider.getPlayers());
+    console.log("Teams:\n", teamProvider.getTeams());
   }
 
-  main();
+  try {
+    main();
+  } catch (error) {
+    console.error("Error in app: ", error);
+  }
 }
 
 app();
